@@ -1,6 +1,6 @@
 # Package
-version     = "2.1"
-author      = "Benjamin N. Summerton <define-private-public>"
+version     = "2.1.1"
+author      = "emekoi"
 description = "A wrapper for stb_image (including stb_image_write & zlib client)."
 license     = "Unlicense (Public Domain)"
 

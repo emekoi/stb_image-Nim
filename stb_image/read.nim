@@ -27,10 +27,10 @@ type
 # NOTE: this function is here for completness, but it's not exposed in the
 #       nim-friendly API, since seq[byte] are GC'd
 proc stbi_image_free(retval_from_stbi_load: pointer)
-  {.importc: "stbi_image_free".}
+  {.importc: "stbi_image_free", cdecl.}
 
 proc stbi_failure_reason(): cstring
-  {.importc: "stbi_failure_reason".}
+  {.importc: "stbi_failure_reason", cdecl.}
 
 
 ## Get an error message for why a read might have failed.  This is not a
@@ -43,6 +43,8 @@ proc failureReason*(): string =
 # ==================
 # 8 bits per channel
 # ==================
+
+{.push cdecl.}
 
 proc stbi_load(
   filename: cstring;
@@ -70,6 +72,7 @@ proc stbi_load_from_file(
 ): ptr cuchar
   {.importc: "stbi_load_from_file".}
 
+{.pop.}
 
 ## This takes in a filename and will return a sequence (of unsigned bytes) that
 ## is the pixel data. `x`, `y` are the dimensions of the image, and
@@ -188,6 +191,8 @@ proc loadFromFile*(f: File, x, y, channels_in_file: var int, desired_channels: i
 # 16 bits per channel
 # ===================
 
+{.push cdecl.}
+
 proc stbi_load_16(
   filename: cstring;
   x, y, channels_in_file: var cint,
@@ -210,6 +215,7 @@ proc stbi_load_16_from_memory(
 ): ptr cushort
   {.importc: "stbi_load_16_from_memory".}
 
+{.pop.}
 
 ## This takes in a filename and will return a sequence (of unsigned shorts) that
 ## is the pixel data. `x`, `y` are the dimensions of the image, and
@@ -335,6 +341,8 @@ proc load16FromMemory*(buffer: seq[byte]; x, y, channels_in_file: var int; desir
 # Float channel interface
 # =======================
 
+{.push cdecl.}
+
 proc stbi_loadf(
   filename: cstring;
   x, y, channels_in_file: var cint;
@@ -360,6 +368,7 @@ proc stbi_loadf_from_file(
 ): ptr cfloat
   {.importc: "stbi_loadf_from_file".}
 
+{.pop.}
 
 ## This takes in a filename and will return a sequence (of 32 bit floats) that
 ## is the pixel data. `x`, `y` are the dimensions of the image, and
@@ -478,6 +487,8 @@ proc loadFFromFile*(f: File, x, y, channels_in_file: var int, desired_channels: 
 # HDR functions
 # =============
 
+{.push cdecl.}
+
 proc stbi_hdr_to_ldr_gamma(gamma: cfloat)
   {.importc: "stbi_hdr_to_ldr_gamma".}
 
@@ -502,6 +513,7 @@ proc stbi_is_hdr(filename: cstring): cint
 proc stbi_is_hdr_from_file(f: File): cint
   {.importc: "stbi_is_hdr_from_file".}
 
+{.pop.}
 
 ## Please see the "HDR image support" section in the `stb_image.h` header file
 proc HDRToLDRGamma*(gamma: float) =
@@ -544,6 +556,8 @@ proc isHDRFromFile*(f: File): bool =
 # Info Functions
 # ==============
 
+{.push cdecl.}
+
 proc stbi_info_from_memory(
   buffer: ptr cuchar;
   len: cint;
@@ -566,6 +580,7 @@ proc stbi_info_from_file(
 ): cint
   {.importc: "stbi_info_from_file".}
 
+{.pop.}
 
 ## Querys a buffer to see if that data is a loadable image and get it's
 ## dimensions.  Returns true if stb_image can load this image, false otherwise.
@@ -624,6 +639,8 @@ proc infoFromFile*(f: File; x, y, comp: var int): bool =
 # Extra Functions
 # ===============
 
+{.push cdecl.}
+
 proc stbi_set_unpremultiply_on_load(flag_true_if_should_unpremultiply: cint)
   {.importc: "stbi_set_unpremultiply_on_load".}
 
@@ -633,6 +650,7 @@ proc stbi_convert_iphone_png_to_rgb(flag_true_if_should_convert: cint)
 proc stbi_set_flip_vertically_on_load(flag_true_if_should_flip: cint)
   {.importc: "stbi_set_flip_vertically_on_load".}
 
+{.pop.}
 
 ## From the header file: "For image formats that explicitly notate that they
 ## have premultiplied alpha, we just return the colors as stored in the file.
@@ -662,6 +680,8 @@ proc setFlipVerticallyOnLoad*(flip: bool) =
 # ZLIB Client Functions
 # =====================
 
+{.push cdecl.}
+
 # C Wrapper procedures. Only these three are needed, all other only provide other default values
 proc stbi_zlib_decode_malloc_guesssize_headerflag(buffer: ptr cuchar, len: cint, initial_size: cint, 
   outlen: ptr cint, parse_header: cint): ptr cuchar {.importc: "stbi_zlib_decode_malloc_guesssize_headerflag".}
@@ -671,6 +691,8 @@ proc stbi_zlib_decode_buffer(obuffer: ptr cuchar, olen: cint, ibuffer: ptr cucha
 
 proc stbi_zlib_decode_noheader_buffer(obuffer: ptr cuchar, olen: cint, ibuffer: ptr cuchar, ilen: cint): cint
   {.importc: "stbi_zlib_decode_noheader_buffer".}
+
+{.pop.}
 
 ## Uncompresses ``buffer`` and returns the decompressed data. Too parse a raw inflate stream 
 ## switch parseheader to ``false``.

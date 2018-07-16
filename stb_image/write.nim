@@ -23,6 +23,7 @@ when defined(Posix) and not defined(haiku):
 # Used for set if the TGA function should use run length encoding
 var stbi_write_tga_with_rle {.importc: "stbi_write_tga_with_rle".}: cint
 
+{.push cdecl.}
 
 # Internal functions
 proc stbi_write_png(
@@ -62,6 +63,7 @@ proc stbi_write_jpg(
 ): cint
   {.importc: "stbi_write_jpg".}
 
+{.pop.}
 
 ## This proc will let you write out data to a PNG file.  `w` and `h` are the
 ## size of the image you want.  `comp` is how many components make up a single
@@ -134,6 +136,7 @@ proc writeJPG*(filename: string; w, h, comp: int; data: openarray[byte]; quality
 # Callback prototype for the `*_func` writing functions
 type writeCallback* = proc (context, data: pointer, size: cint) {.cdecl.}
 
+{.push cdecl.}
 
 proc stbi_write_png_to_func(
   fn: writeCallback,
@@ -177,6 +180,7 @@ proc stbi_write_jpg_to_func(
 ): cint
   {.importc: "stbi_write_jpg_to_func".}
 
+{.pop.}
 
 proc streamWriteData(context, data: pointer, size: cint) {.cdecl.} =
   if size > 0:
